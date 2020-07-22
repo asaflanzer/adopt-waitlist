@@ -6,7 +6,8 @@
     "shell": "firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "heroku-postbuild": "cd ../client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "engines": {
     "node": "10"
