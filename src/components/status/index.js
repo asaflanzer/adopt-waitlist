@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { db } from '../../firebase/firebaseConfig';
 import './styled.scss';
-// import dayjs from 'dayjs';
 // import firebase from 'firebase/app';
 // ant design
 import { Result, Typography, Spin, Divider } from 'antd';
