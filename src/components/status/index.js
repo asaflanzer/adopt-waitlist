@@ -26,12 +26,11 @@ const Status = () => {
     localStorage.getItem('inQueue') || 'none found'
   );
 
-  if (inQueue === null) {
-    history.push('/');
-  }
-
   useEffect(() => {
     setTimeout(() => {
+      if (inQueue === null) {
+        history.push('/');
+      }
       db.collection('queue')
         .doc(localStorage.getItem('inQueue') || '999999')
         .onSnapshot(
@@ -92,7 +91,7 @@ const Status = () => {
     // return () => {
     //   history.push('/');
     // };
-  }, [inQueue, db]);
+  }, [inQueue, history, db]);
 
   useEffect(() => {
     // Get the first upcoming number in queue
@@ -172,7 +171,8 @@ const Status = () => {
           .delete()
           .then(() => {
             localStorage.removeItem('inQueue');
-            window.location.reload();
+            history.push('/');
+            // window.location.reload();
             console.log('User deleted successfully');
           });
       },
