@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import logo from '../../static/adopt_logo.png';
-import { db } from '../../firebase/firebaseConfig';
+import { FirebaseContext } from '../../firebase/firebaseConfig';
+import 'firebase/firestore';
 import './styled.scss';
 // import firebase from 'firebase/app';
 // ant design
@@ -14,10 +15,13 @@ import { UserOutlined } from '@ant-design/icons';
 const { Title, Text } = Typography;
 
 const Landing = () => {
+  const firebase = useContext(FirebaseContext);
   const history = useHistory();
   const [loading, setLoading] = useState(true);
   const [disabled] = useState(false); // Change to true for PRODUCTION
   const [queueLength, setQueueLength] = useState('');
+
+  const db = firebase.firestore();
 
   if (localStorage.getItem('inQueue') !== null) {
     history.push('/status');
@@ -60,7 +64,7 @@ const Landing = () => {
     // ).then((result) => {
     //   setQueueLength(result.data.length);
     // });
-  }, []);
+  }, [db]);
 
   return (
     <div

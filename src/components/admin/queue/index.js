@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 // import { useHistory } from 'react-router-dom';
-import { db } from '../../../firebase/firebaseConfig';
+import { FirebaseContext } from '../../../firebase/firebaseConfig';
+import 'firebase/firestore';
 import './styled.scss';
-import firebase from 'firebase/app';
 import dayjs from 'dayjs';
 // ant design
 import { Table, Tag, Modal } from 'antd';
@@ -104,6 +104,7 @@ const columns = [
 ];
 
 const Queue = () => {
+  const firebase = useContext(FirebaseContext);
   const [usersList, setUsersList] = useState([]);
   const [servedList, setServedList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -111,6 +112,8 @@ const Queue = () => {
   const [totalServed, setTotalServed] = useState([]);
   const [lastServed, setLastServed] = useState('');
   // const [nextQueue, setNextQueue] = useState('');
+
+  const db = firebase.firestore();
 
   useEffect(() => {
     db.collection('queue')
@@ -165,12 +168,12 @@ const Queue = () => {
     //   //   })
     //   // );
     // });
-  }, [loading]);
+  }, [loading, db]);
 
   useEffect(() => {
     db.collection('queue')
       .where('status', '==', 'served')
-      .orderBy(firebase.firestore.FieldPath.documentId(), 'desc')
+      .orderBy(db.FieldPath.documentId(), 'desc')
       .onSnapshot(
         (querySnapshot) => {
           const served = [];
@@ -198,7 +201,7 @@ const Queue = () => {
     //       });
     //     setServedList(served);
     //   });
-  }, [loading]);
+  }, [loading, db]);
 
   // useEffect(() => {
   //   // Get total queue size
@@ -250,7 +253,7 @@ const Queue = () => {
 
     db.collection('queue')
       .where('status', '==', 'served')
-      .orderBy(firebase.firestore.FieldPath.documentId(), 'desc')
+      .orderBy(db.FieldPath.documentId(), 'desc')
       .limit(1)
       .get()
       .then((doc) => {
@@ -258,7 +261,7 @@ const Queue = () => {
           setLastServed(data.id);
         });
       });
-  }, []);
+  }, [db]);
 
   const handleNext = () => {
     //update user status

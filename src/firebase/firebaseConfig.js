@@ -1,5 +1,9 @@
+import React, { createContext } from 'react';
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
+
+const FirebaseContext = createContext(null);
+export { FirebaseContext };
 
 // Initialize Firebase
 let config = {
@@ -12,8 +16,14 @@ let config = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
-firebase.initializeApp(config);
+export default ({ children }) => {
+  if (!firebase.apps.length) {
+    firebase.initializeApp(config);
+  }
 
-const db = firebase.firestore();
-
-export { db };
+  return (
+    <FirebaseContext.Provider value={firebase} db={firebase.firestore()}>
+      {children}
+    </FirebaseContext.Provider>
+  );
+};

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { db } from '../../firebase/firebaseConfig';
+import { FirebaseContext } from '../../firebase/firebaseConfig';
+import 'firebase/firestore';
 import './styled.scss';
-// import firebase from 'firebase/app';
 // ant design
 import { Result, Typography, Spin, Divider } from 'antd';
 import { Modal, Card } from 'antd';
@@ -29,11 +29,15 @@ import dayjs from 'dayjs';
 // };
 
 const Status = () => {
+  const firebase = useContext(FirebaseContext);
   const [userStatus, setUserStatus] = useState([]);
   const [queueLength, setQueueLength] = useState();
   const [nextQueue, setNextQueue] = useState();
   const [loading, setLoading] = useState(true);
   const history = useHistory();
+
+  const db = firebase.firestore();
+
   // Get user queue number from localStorage
   const [inQueue, setInQueue] = useState(
     localStorage.getItem('inQueue') || 'none found'
@@ -103,7 +107,7 @@ const Status = () => {
     return () => {
       //history.push('/');
     };
-  }, [history, inQueue]);
+  }, [history, inQueue, db]);
 
   useEffect(() => {
     // Get the first upcoming number in queue
@@ -121,7 +125,7 @@ const Status = () => {
           console.log(err);
         }
       );
-  }, [nextQueue]);
+  }, [nextQueue, db]);
 
   useEffect(() => {
     // Get total queue size
@@ -147,7 +151,7 @@ const Status = () => {
     //     console.log(snapshot.numChildren());
     //     setQueueLength(snapshot.numChildren());
     //   });
-  }, [queueLength]);
+  }, [queueLength, db]);
 
   useEffect(() => {
     // Once each user reachs number 5 in line, update status and send email via BE function
@@ -165,7 +169,7 @@ const Status = () => {
           setLoading(false);
         });
     }
-  }, [queueLength, nextQueue, userStatus, inQueue]);
+  }, [queueLength, nextQueue, userStatus, inQueue, db]);
 
   const handleModal = () => {
     Modal.confirm({

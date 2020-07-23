@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { db } from '../../firebase/firebaseConfig';
+import { FirebaseContext } from '../../firebase/firebaseConfig';
+import 'firebase/firestore';
 // import firebase from 'firebase/app';
 import './styled.scss';
 // ant design
@@ -11,11 +12,14 @@ import { Modal } from 'antd';
 const { Title } = Typography;
 
 const ContactForm = () => {
+  const firebase = useContext(FirebaseContext);
   const [formData, setFormData] = useState([]);
   const [readDoc, setReadDoc] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [queueLength, setQueueLength] = useState('');
   const history = useHistory();
+
+  const db = firebase.firestore();
 
   if (localStorage.getItem('inQueue') !== null) {
     history.push('/status');
@@ -39,7 +43,7 @@ const ContactForm = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, [queueLength]);
+  }, [queueLength, db]);
 
   const updateInput = (e) => {
     setFormData({
