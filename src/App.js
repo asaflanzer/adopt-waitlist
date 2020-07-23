@@ -12,10 +12,7 @@ import FirebaseProvider from './firebase/firebaseConfig';
 const App = () => {
   return (
     <FirebaseProvider>
-      <div
-        className='container'
-        style={{ minHeight: '100vh', position: 'relative' }}
-      >
+      <div className='container' style={{ position: 'relative' }}>
         <BrowserRouter>
           <Switch>
             <Route exact path='/'>
