@@ -70,6 +70,10 @@ const Landing = () => {
     // ).then((result) => {
     //   setQueueLength(result.data.length);
     // });
+    return () => {
+      setQueueLength('');
+      setLoading(false);
+    };
   }, [db]);
 
   return (
@@ -98,7 +102,7 @@ const Landing = () => {
                 <Col span={10}>
                   <Statistic
                     title='מזמן המתנה משוער'
-                    value={`${queueLength * 3}`}
+                    value={`${queueLength * 2}`}
                     prefix={`'דק`}
                   />
                 </Col>

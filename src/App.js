@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 // compontents
 import Landing from './components/landing';
 import ContactForm from './components/form';
@@ -27,7 +27,6 @@ const App = () => {
             <Route path='/queue'>
               <Queue />
             </Route>
-            <Redirect push to='/' />
           </Switch>
         </BrowserRouter>
       </div>

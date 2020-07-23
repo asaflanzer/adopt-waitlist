@@ -21,16 +21,14 @@ const Status = () => {
 
   const db = firebase.firestore();
 
-  if (localStorage.getItem('inQueue') === null) {
+  // Get user queue number from localStorage
+  const [inQueue, setInQueue] = useState(
+    localStorage.getItem('inQueue') || 'none found'
+  );
+
+  if (inQueue === null) {
     history.push('/');
   }
-
-  // Get user queue number from localStorage
-  // const [inQueue, setInQueue] = useState(
-  //   localStorage.getItem('inQueue') || 'none found'
-  // );
-
-  const inQueue = localStorage.getItem('inQueue');
 
   useEffect(() => {
     setTimeout(() => {
@@ -46,7 +44,7 @@ const Status = () => {
               });
               setLoading(false);
             } else {
-              //setInQueue(localStorage.getItem('inQueue'));
+              setInQueue(localStorage.getItem('inQueue'));
               setLoading(false);
             }
           },
@@ -238,7 +236,7 @@ const Status = () => {
                 <Col span={8}>
                   <Statistic
                     title='מזמן המתנה משוער'
-                    value={(queueLength - nextQueue - 1) * 3}
+                    value={(queueLength - nextQueue - 1) * 2}
                     prefix={`'דק`}
                   />
                 </Col>

@@ -70,7 +70,7 @@ const ContactForm = () => {
       status: '',
       timestamp: '',
     });
-    history.push(`/status`);
+    history.push('/status');
   };
 
   const addUser = (generatePad) => {
@@ -188,8 +188,9 @@ const ContactForm = () => {
               value={formData.phone || ''}
             />
           </Form.Item>
-          קראתי ואני מסכימ/ה לגבי{' '}
+          <Typography.Text>קראתי ואני מסכימ/ה לגבי{` `}</Typography.Text>
           <Typography.Link onClick={info}>ההבהרות ליום אימוץ</Typography.Link>
+          {` `}
           <Checkbox
             oname='agreement'
             onChange={handleCheck}

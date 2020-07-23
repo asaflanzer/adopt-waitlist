@@ -410,7 +410,7 @@ const Queue = () => {
             <Col span={6} xs={12}>
               <Statistic
                 title='זמן המתנה משוער'
-                value={`${totalInQueue * 3}`}
+                value={`${totalInQueue * 2}`}
                 prefix={`'דק`}
                 style={{ border: '1px solid #999', padding: 5 }}
               />
