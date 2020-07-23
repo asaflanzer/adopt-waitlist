@@ -130,9 +130,25 @@ const ContactForm = () => {
       ),
       content: (
         <div style={{ margin: '0 auto', textAlign: 'right' }}>
-          <p>חובה שכל דיירי הבית יהיו נוכחים</p>
-          <p>ימי אימוץ הם רק ביום שישי בין 12-16</p>
-          <p>לא כל הקודם זוכה</p>
+          <p>
+            - האימוץ יתקיים בנוכחות כל דיירי הבית
+            <br /> כולל ילדים וכלבים
+          </p>
+          <p>
+            לא כל הקודם זוכה - אנחנו נדבר עם כולם
+            <br />
+            ורק כשיסתיים התור יתקבלו החלטות
+          </p>
+          <p>
+            ההמתנה יכולה לקחת זמן ויכול להיות שנחרוג
+            <br />
+            בשעת הסיום, נשמח שתתאזרו בסבלנות
+          </p>
+          <p>
+            אין חובה להישאר עד תורכם אך יש להגיע
+            <br />
+            בזמן לפי עדכוני האפליקציה
+          </p>
         </div>
       ),
       okText: 'אני מסכים/ה',
@@ -162,7 +178,7 @@ const ContactForm = () => {
               dir='rtl'
               type='text'
               name='name'
-              placeholder='שם פרטי ומשפחה'
+              placeholder='שם מלא'
               onChange={updateInput}
               value={formData.name || ''}
             />
@@ -172,7 +188,7 @@ const ContactForm = () => {
               dir='rtl'
               type='email'
               name='email'
-              placeholder='כתובת אימייל לעדכון על התור בלבד'
+              placeholder='כתובת מייל לעדכון מיקומך בתור'
               onChange={updateInput}
               value={formData.email || ''}
             />
@@ -183,7 +199,7 @@ const ContactForm = () => {
               type='tel'
               pattern='[0-9]*'
               name='phone'
-              placeholder='מספר טלפון לעדכון לגבי אימוץ'
+              placeholder='מספר טלפון לעדכונים'
               onChange={updateInput}
               value={formData.phone || ''}
             />

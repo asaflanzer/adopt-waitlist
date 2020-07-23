@@ -82,18 +82,41 @@ const Landing = () => {
         margin: '0 auto',
         textAlign: 'center',
         maxWidth: 768,
-        paddingTop: 50,
+        paddingTop: 30,
       }}
     >
       <Row>
-        <Col span={2} />
-        <Col span={20}>
-          <img src={logo} heigth='100' width='100' alt='logo' />
-          <Title level={3}>ברוכים הבאים ליום אימוץ של בית המחסה אדופט</Title>
+        <Col span={24}>
+          <img
+            src={logo}
+            heigth='100'
+            width='100'
+            alt='logo'
+            style={{ marginBottom: 10 }}
+          />
+          <Title level={3}>
+            ברוכים הבאים ליום האימוץ של אדופט - בית מחסה לכלבים
+          </Title>
           <Timeline mode='right' className='landing-timeline'>
-            <Timeline.Item>חובה שכל דיירי הבית יהיו נוכחים</Timeline.Item>
-            <Timeline.Item>ימי אימוץ הם רק ביום שישי בין 12-16</Timeline.Item>
-            <Timeline.Item>לא כל הקודם זוכה</Timeline.Item>
+            <Timeline.Item>
+              - האימוץ יתקיים בנוכחות כל דיירי הבית
+              <br /> כולל ילדים וכלבים
+            </Timeline.Item>
+            <Timeline.Item>
+              לא כל הקודם זוכה - אנחנו נדבר עם כולם
+              <br />
+              ורק כשיסתיים התור יתקבלו החלטות
+            </Timeline.Item>
+            <Timeline.Item>
+              ההמתנה יכולה לקחת זמן ויכול להיות שנחרוג
+              <br />
+              בשעת הסיום, נשמח שתתאזרו בסבלנות
+            </Timeline.Item>
+            <Timeline.Item>
+              אין חובה להישאר עד תורכם אך יש להגיע
+              <br />
+              בזמן לפי עדכוני האפליקציה
+            </Timeline.Item>
           </Timeline>
           <Row gutter={16}>
             <Col span={2} />
@@ -101,7 +124,7 @@ const Landing = () => {
               <>
                 <Col span={10}>
                   <Statistic
-                    title='מזמן המתנה משוער'
+                    title='זמן המתנה משוער'
                     value={`${queueLength * 2}`}
                     prefix={`'דק`}
                   />
@@ -125,7 +148,7 @@ const Landing = () => {
             )}
             <Col span={2} />
           </Row>
-          <div style={{ marginTop: 50 }}>
+          <div style={{ marginTop: 15 }}>
             {disabled ? (
               <button type='primary' disabled='disabled'>
                 אין יותר תורים, נתראה שבוע הבא
@@ -144,7 +167,6 @@ const Landing = () => {
             </Text>
           </div>
         </Col>
-        <Col span={2} />
       </Row>
     </div>
   );

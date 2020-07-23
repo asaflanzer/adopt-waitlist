@@ -4,8 +4,8 @@ import { FirebaseContext } from '../../firebase/firebaseConfig';
 import 'firebase/firestore';
 import './styled.scss';
 // ant design
-import { Result, Typography, Spin, Divider } from 'antd';
-import { Modal, Card } from 'antd';
+import { Result, Typography, Spin } from 'antd';
+import { Timeline, Modal, Card } from 'antd';
 import { Statistic, Row, Col } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
@@ -185,9 +185,9 @@ const Status = () => {
   return (
     <div
       style={{
-        margin: '0 auto',
+        margin: '15px auto',
         textAlign: 'center',
-        padding: '50 15px 0',
+        padding: '5px 20px 0 20px',
         maxWidth: 768,
       }}
     >
@@ -209,12 +209,13 @@ const Status = () => {
             <Card
               title={
                 <div>
-                  {`${userStatus.name} שלום`}
-                  <p>הצרפת בהצלחה לרשימת ההמתנה ליום אימוץ של אדופט</p>
+                  <p>{` ,שלום ${userStatus.name}`}</p>
+                  <p>הצטרפת בהצלחה לרשימת ההמתנה</p>
+                  <p>ליום האימוץ של אדופט</p>
                 </div>
               }
               style={{
-                width: '95%',
+                width: '100%',
                 margin: '0 auto',
                 border: '1px solid #000',
                 borderRadius: 4,
@@ -230,12 +231,8 @@ const Status = () => {
               )}
               <Row gutter={16}>
                 <Col span={8}>
-                  <Statistic title='הבא בתור' value={`${nextQueue}`} />
-                  {/* {`ADP${nextQueue}`} */}
-                </Col>
-                <Col span={8}>
                   <Statistic
-                    title='מזמן המתנה משוער'
+                    title='זמן המתנה משוער'
                     value={(queueLength - nextQueue - 1) * 2}
                     prefix={`'דק`}
                   />
@@ -247,29 +244,43 @@ const Status = () => {
                     prefix={<UserOutlined />}
                   />
                 </Col>
+                <Col span={8}>
+                  <Statistic
+                    title='אחרונים שנכנסו'
+                    value={`${nextQueue}`}
+                    className='last-in'
+                  />
+                  {/* {`ADP${nextQueue}`} */}
+                </Col>
               </Row>
-              <Divider />
-              <Typography.Text>
-                {userStatus
-                  ? dayjs(userStatus.timestamp).format('DD/MM/YYYY HH:mm')
-                  : ''}
+              <Timeline mode='right' className='landing-timeline'>
+                <Timeline.Item>
+                  - האימוץ יתקיים בנוכחות כל דיירי הבית
+                  <br /> כולל ילדים וכלבים
+                </Timeline.Item>
+                <Timeline.Item>
+                  לא כל הקודם זוכה - אנחנו נדבר עם כולם
+                  <br />
+                  ורק כשיסתיים התור יתקבלו החלטות
+                </Timeline.Item>
+                <Timeline.Item>
+                  ההמתנה יכולה לקחת זמן ויכול להיות שנחרוג בשעת הסיום, נשמח
+                  שתתאזרו בסבלנות
+                </Timeline.Item>
+                <Timeline.Item>
+                  אין חובה להישאר עד תורכם אך יש להגיע
+                  <br />
+                  בזמן לפי עדכוני האפליקציה
+                </Timeline.Item>
+              </Timeline>
+              <Typography.Text type='secondary'>
+                {userStatus ? dayjs(userStatus.timestamp).format('HH:mm') : ''}{' '}
+                הצרפת לתור בשעה
               </Typography.Text>
-              <p>
-                ישלח לך הודעה במייל כאשר המספר בתור שלך מתקרב ועליך יהיה לשוב
-                לגינת האימוץ
-              </p>
+              <p>כאשר מספרך יתקרב, תקבל מייל שיזכירך לשוב לגינת האימוץ</p>
               <Link to='/' onClick={handleModal}>
                 ביטול התור
               </Link>
-              {/* <Modal
-              title='Title'
-              visible={visible}
-              onOk={this.handleOk}
-              confirmLoading={confirmLoading}
-              onCancel={this.handleCancel}
-            >
-              <p>{ModalText}</p>
-            </Modal> */}
             </Card>
           </>
         )

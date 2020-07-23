@@ -19,3 +19,16 @@
     border-color: #ff4d4f !important;
     background: #ff2629 !important;
 }
+
+p { margin-bottom: 0 !important;}
+
+.last-in .ant-statistic-title {
+    height: 44px !important;
+}
+
+@media only screen and (max-width: 768px) {
+
+    .landing-timeline {
+      margin: 30px 5% 0 0 !important; 
+    }
+  }
