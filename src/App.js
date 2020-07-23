@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 // compontents
 import Landing from './components/landing';
 import ContactForm from './components/form';
@@ -14,18 +14,30 @@ const App = () => {
     <FirebaseProvider>
       <div
         className='container'
-        style={{ minHeight: '100vh-50px', position: 'relative' }}
+        style={{ minHeight: '100vh', position: 'relative' }}
       >
         <BrowserRouter>
           <Switch>
             <Route exact path='/'>
-              <Landing />
+              {localStorage.getItem('inQueue') ? (
+                <Redirect to='/status' />
+              ) : (
+                <Landing />
+              )}
             </Route>
             <Route path='/form'>
-              <ContactForm />
+              {localStorage.getItem('inQueue') ? (
+                <Redirect to='/status' />
+              ) : (
+                <ContactForm />
+              )}
             </Route>
             <Route path='/status'>
-              <Status />
+              {localStorage.getItem('inQueue') ? (
+                <Status />
+              ) : (
+                <Redirect to='/' />
+              )}
             </Route>
             <Route path='/queue'>
               <Queue />

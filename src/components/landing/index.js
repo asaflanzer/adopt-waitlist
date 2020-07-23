@@ -4,7 +4,6 @@ import logo from '../../static/adopt_logo.png';
 import { FirebaseContext } from '../../firebase/firebaseConfig';
 import 'firebase/firestore';
 import './styled.scss';
-// import firebase from 'firebase/app';
 // ant design
 import { Typography } from 'antd';
 import { Timeline } from 'antd';
@@ -18,20 +17,18 @@ const Landing = () => {
   const firebase = useContext(FirebaseContext);
   const history = useHistory();
   const [loading, setLoading] = useState(true);
-  const [disabled] = useState(false); // Change to true for PRODUCTION
+  const [disabled, setDisabled] = useState(false); // Change to true for PRODUCTION
   const [queueLength, setQueueLength] = useState('');
 
   const db = firebase.firestore();
 
-  if (localStorage.getItem('inQueue') !== null) {
-    history.push('/status');
-  }
-
   useEffect(() => {
+    // Enable queue till 15:30
     // if (date.hour() === 15 && date.minute() > 30) {
     //   setDisabled(true);
     // }
     // UNCOmMENT FOR PRODUCTION
+    // Enable queue on FRI between 11-15
     // if (date.day() === 5 && date.hour() >= 11 && date.hour() < 15) {
     //   setDisabled(false);
     // } else {
@@ -50,15 +47,20 @@ const Landing = () => {
 
     // Get total queue size
     db.collection('queue')
-      .get()
-      .then((snapshot) => {
-        setQueueLength(snapshot.size);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
+      .where('status', 'in', ['pending', 'notified'])
+      .onSnapshot(
+        (querySnapshot) => {
+          setLoading(false);
+          setQueueLength(querySnapshot.size);
+          // const queue = [];
+          // querySnapshot.forEach((doc) => {
+          //   setNextQueue(doc.id);
+          // });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
     // Axios.get(
     //   'https://europe-west1-virtual-line.cloudfunctions.net/api/user'
     // ).then((result) => {
@@ -72,7 +74,7 @@ const Landing = () => {
         margin: '0 auto',
         textAlign: 'center',
         maxWidth: 768,
-        marginTop: 50,
+        paddingTop: 50,
       }}
     >
       <Row>
@@ -106,7 +108,7 @@ const Landing = () => {
               </>
             ) : (
               <>
-                <Col span={12}>
+                <Col span={20}>
                   <div className='loading'>
                     <Spin />
                   </div>

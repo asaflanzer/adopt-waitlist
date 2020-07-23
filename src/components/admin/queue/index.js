@@ -173,7 +173,7 @@ const Queue = () => {
   useEffect(() => {
     db.collection('queue')
       .where('status', '==', 'served')
-      .orderBy(db.FieldPath.documentId(), 'desc')
+      .orderBy(firebase.firestore.FieldPath.documentId(), 'desc')
       .onSnapshot(
         (querySnapshot) => {
           const served = [];
@@ -201,7 +201,7 @@ const Queue = () => {
     //       });
     //     setServedList(served);
     //   });
-  }, [loading, db]);
+  }, [loading, db, firebase.firestore.FieldPath]);
 
   // useEffect(() => {
   //   // Get total queue size
@@ -253,7 +253,7 @@ const Queue = () => {
 
     db.collection('queue')
       .where('status', '==', 'served')
-      .orderBy(db.FieldPath.documentId(), 'desc')
+      .orderBy(firebase.firestore.FieldPath.documentId(), 'desc')
       .limit(1)
       .get()
       .then((doc) => {
@@ -261,7 +261,7 @@ const Queue = () => {
           setLastServed(data.id);
         });
       });
-  }, [db]);
+  }, [db, firebase.firestore.FieldPath]);
 
   const handleNext = () => {
     //update user status
@@ -351,8 +351,8 @@ const Queue = () => {
       okType: 'danger',
       cancelText: 'חזור',
       onOk() {
-        // NEED TO CHANGE TO 'QUEUE' COLLECTION!!!
-        db.collection('served')
+        // NEED TO CHANGE TO 'QUEUE' COLLECTION IN PRODUCTION!!!
+        db.collection('queue')
           .get()
           .then((querySnapshot) => {
             // Once we get the results, begin a batch
@@ -378,9 +378,10 @@ const Queue = () => {
   return (
     <div
       style={{
-        margin: '50px auto 0',
+        margin: '0 auto',
         textAlign: 'center',
         maxWidth: 768,
+        paddingTop: 10,
       }}
     >
       {usersList.length === 0 ? (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FirebaseContext } from '../../firebase/firebaseConfig';
 import 'firebase/firestore';
 import './styled.scss';
@@ -11,41 +11,24 @@ import { UserOutlined } from '@ant-design/icons';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
-// const useStorage = (storageName) => {
-//   const checkStorage = (key) => {
-//     const storedData = localStorage.getItem(key);
-//     if (!storedData) console.log('Local storage is empty');
-//   };
-
-//   useEffect(() => {
-//     // when app loaded
-//     checkStorage('inQueue');
-
-//     // when storage updated
-//     const handler = ({ key }) => checkStorage(key);
-//     window.addEventListener('storage', handler);
-//     return () => window.removeEventListener('storage', handler);
-//   }, []);
-// };
-
 const Status = () => {
   const firebase = useContext(FirebaseContext);
   const [userStatus, setUserStatus] = useState([]);
   const [queueLength, setQueueLength] = useState();
   const [nextQueue, setNextQueue] = useState();
   const [loading, setLoading] = useState(true);
-  const history = useHistory();
+  // const history = useHistory();
 
   const db = firebase.firestore();
 
   // Get user queue number from localStorage
-  const [inQueue, setInQueue] = useState(
-    localStorage.getItem('inQueue') || 'none found'
-  );
+  // const [inQueue, setInQueue] = useState(
+  //   localStorage.getItem('inQueue') || 'none found'
+  // );
+
+  const inQueue = localStorage.getItem('inQueue');
 
   useEffect(() => {
-    // if (inQueue !== null) {
-
     setTimeout(() => {
       db.collection('queue')
         .doc(localStorage.getItem('inQueue') || '999999')
@@ -59,7 +42,7 @@ const Status = () => {
               });
               setLoading(false);
             } else {
-              setInQueue(localStorage.getItem('inQueue'));
+              //setInQueue(localStorage.getItem('inQueue'));
               setLoading(false);
             }
           },
@@ -104,10 +87,10 @@ const Status = () => {
     //   })
     //   .catch((err) => console.log(err));
 
-    return () => {
-      //history.push('/');
-    };
-  }, [history, inQueue, db]);
+    // return () => {
+    //   history.push('/');
+    // };
+  }, [inQueue, db]);
 
   useEffect(() => {
     // Get the first upcoming number in queue
@@ -116,7 +99,6 @@ const Status = () => {
       .limit(1)
       .onSnapshot(
         (querySnapshot) => {
-          // const queue = [];
           querySnapshot.forEach((doc) => {
             setNextQueue(doc.id);
           });
@@ -134,10 +116,6 @@ const Status = () => {
       .onSnapshot(
         (querySnapshot) => {
           setQueueLength(querySnapshot.size);
-          // const queue = [];
-          // querySnapshot.forEach((doc) => {
-          //   setNextQueue(doc.id);
-          // });
         },
         (err) => {
           console.log(err);
@@ -169,7 +147,8 @@ const Status = () => {
     }
   }, [queueLength, nextQueue, userStatus, inQueue, db]);
 
-  const handleModal = () => {
+  const handleModal = (e) => {
+    e.preventDefault();
     Modal.confirm({
       title: (
         <div style={{ textAlign: 'right', marginBottom: 10, paddingRight: 30 }}>
@@ -186,10 +165,17 @@ const Status = () => {
       okType: 'danger',
       cancelText: 'חזור',
       onOk() {
-        console.log('OK');
+        db.collection('queue')
+          .doc(userStatus.id)
+          .delete()
+          .then(() => {
+            localStorage.removeItem('inQueue');
+            window.location.reload();
+            console.log('User deleted successfully');
+          });
       },
       onCancel() {
-        console.log('Cancel');
+        return true;
       },
     });
   };
@@ -197,9 +183,9 @@ const Status = () => {
   return (
     <div
       style={{
-        margin: '50px auto 0',
+        margin: '0 auto',
         textAlign: 'center',
-        padding: '0 15px',
+        padding: '50 15px 0',
         maxWidth: 768,
       }}
     >

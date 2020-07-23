@@ -21,10 +21,6 @@ const ContactForm = () => {
 
   const db = firebase.firestore();
 
-  if (localStorage.getItem('inQueue') !== null) {
-    history.push('/status');
-  }
-
   useEffect(() => {
     // Get total queue size
     // firebase
@@ -150,7 +146,7 @@ const ContactForm = () => {
           textAlign: 'center',
           maxWidth: 768,
           minWidth: 300,
-          marginTop: 50,
+          paddingTop: 50,
         }}
       >
         <div style={{ margin: '0 auto', textAlign: 'center' }}>
