@@ -154,10 +154,8 @@ const Status = () => {
   }, [queueLength, db]);
 
   useEffect(() => {
-    // Once each user reachs number 5 in line, update status and send email via BE function
-    console.log(queueLength - nextQueue);
-    if (queueLength - nextQueue === 50) {
-      // CHANGE TO 10 for PRODUCTION
+    // Once each user reachs number 10 in line, update status and send email via BE function
+    if (queueLength - nextQueue === 10) {
       //update user status to NOTIFIED
       db.collection('queue')
         .doc(inQueue)
