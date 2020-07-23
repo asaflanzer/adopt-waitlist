@@ -70,7 +70,10 @@ const ContactForm = () => {
       status: '',
       timestamp: '',
     });
-    history.push('/status');
+    history.push({
+      pathname: '/status',
+      pad: generatePad,
+    });
   };
 
   const addUser = (generatePad) => {
@@ -93,7 +96,7 @@ const ContactForm = () => {
       })
       .then(() => {
         // console.log('user joined queue successfully');
-        localStorage.setItem('inQueue', generatePad);
+        //localStorage.setItem('inQueue', generatePad);
       })
       .catch((error) => {
         console.log(error);
