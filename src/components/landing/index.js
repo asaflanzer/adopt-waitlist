@@ -18,7 +18,7 @@ const Landing = () => {
   const location = useLocation();
   const history = useHistory();
   const [loading, setLoading] = useState(true);
-  const [disabled, setDisabled] = useState(false); // Change to true for PRODUCTION
+  const [disabled] = useState(false); // Change to true for PRODUCTION
   const [queueLength, setQueueLength] = useState('');
 
   const db = firebase.firestore();
