@@ -118,6 +118,7 @@ const Queue = () => {
   useEffect(() => {
     db.collection('queue')
       .where('status', 'in', ['pending', 'notified'])
+      .orderBy('timestamp', 'asc')
       .limit(5)
       .onSnapshot(
         (querySnapshot) => {
@@ -277,6 +278,7 @@ const Queue = () => {
 
     db.collection('queue')
       .where('status', 'in', ['pending', 'notified'])
+      .orderBy('timestamp', 'asc')
       .limit(5)
       .onSnapshot(
         (querySnapshot) => {

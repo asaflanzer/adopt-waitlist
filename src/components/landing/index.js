@@ -166,6 +166,10 @@ const Landing = () => {
               הצטרפתם כבר לתור? <Link to='/status'>בדקו את מיקומכם</Link>
             </Text>
             <br />
+            <br />
+            <Link to='/queue'>כניסת צוות</Link>
+            <br />
+            <br />
           </div>
         </Col>
       </Row>

@@ -24,9 +24,7 @@ const App = () => {
             <Route path='/status'>
               <Status />
             </Route>
-            <Route path='/queue'>
-              <Queue />
-            </Route>
+            <Route exact path='/queue' component={Queue} />
           </Switch>
         </BrowserRouter>
       </div>
