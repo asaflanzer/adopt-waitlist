@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import logo from '../../static/adopt_logo.png';
 import { FirebaseContext } from '../../firebase/firebaseConfig';
 import 'firebase/firestore';
@@ -15,7 +15,6 @@ const { Title, Text } = Typography;
 
 const Landing = () => {
   const firebase = useContext(FirebaseContext);
-  const location = useLocation();
   const history = useHistory();
   const [loading, setLoading] = useState(true);
   const [disabled] = useState(false); // Change to true for PRODUCTION
