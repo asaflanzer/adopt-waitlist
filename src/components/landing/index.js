@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import logo from '../../static/adopt_logo.png';
 import { FirebaseContext } from '../../firebase/firebaseConfig';
 import 'firebase/firestore';
@@ -15,6 +15,7 @@ const { Title, Text } = Typography;
 
 const Landing = () => {
   const firebase = useContext(FirebaseContext);
+  const location = useLocation();
   const history = useHistory();
   const [loading, setLoading] = useState(true);
   const [disabled, setDisabled] = useState(false); // Change to true for PRODUCTION
@@ -22,19 +23,23 @@ const Landing = () => {
 
   const db = firebase.firestore();
 
-  useEffect(() => {
-    // Enable queue till 15:30
-    // if (date.hour() === 15 && date.minute() > 30) {
-    //   setDisabled(true);
-    // }
-    // UNCOmMENT FOR PRODUCTION
-    // Enable queue on FRI between 11-15
-    // if (date.day() === 5 && date.hour() >= 11 && date.hour() < 15) {
-    //   setDisabled(false);
-    // } else {
-    //   setDisabled(true);
-    // }
-  }, []);
+  if (localStorage.getItem('inQueue') !== null) {
+    history.push('/status');
+  }
+
+  // useEffect(() => {
+  //   // //Enable queue till 15:30
+  //   // if (date.hour() === 15 && date.minute() > 30) {
+  //   //   setDisabled(true);
+  //   // }
+  //   //UNCOmMENT FOR PRODUCTION
+  //   //Enable queue on FRI between 11-15
+  //   if (date.day() === 5 && date.hour() >= 11 && date.hour() < 15) {
+  //     setDisabled(false);
+  //   } else {
+  //     setDisabled(true);
+  //   }
+  // }, []);
 
   useEffect(() => {
     // firebase

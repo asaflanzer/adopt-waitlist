@@ -19,29 +19,18 @@ const App = () => {
         <BrowserRouter>
           <Switch>
             <Route exact path='/'>
-              {localStorage.getItem('inQueue') ? (
-                <Redirect to='/status' />
-              ) : (
-                <Landing />
-              )}
+              <Landing />
             </Route>
             <Route path='/form'>
-              {localStorage.getItem('inQueue') ? (
-                <Redirect to='/status' />
-              ) : (
-                <ContactForm />
-              )}
+              <ContactForm />
             </Route>
             <Route path='/status'>
-              {localStorage.getItem('inQueue') ? (
-                <Status />
-              ) : (
-                <Redirect to='/' />
-              )}
+              <Status />
             </Route>
             <Route path='/queue'>
               <Queue />
             </Route>
+            <Redirect push to='/' />
           </Switch>
         </BrowserRouter>
       </div>

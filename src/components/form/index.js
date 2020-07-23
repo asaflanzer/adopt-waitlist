@@ -21,6 +21,10 @@ const ContactForm = () => {
 
   const db = firebase.firestore();
 
+  if (localStorage.getItem('inQueue') !== null) {
+    history.push('/status');
+  }
+
   useEffect(() => {
     // Get total queue size
     // firebase
@@ -88,7 +92,7 @@ const ContactForm = () => {
         timestamp: new Date().toISOString(),
       })
       .then(() => {
-        console.log('user joined queue successfully');
+        // console.log('user joined queue successfully');
         localStorage.setItem('inQueue', generatePad);
       })
       .catch((error) => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { FirebaseContext } from '../../firebase/firebaseConfig';
 import 'firebase/firestore';
 import './styled.scss';
@@ -17,9 +17,13 @@ const Status = () => {
   const [queueLength, setQueueLength] = useState();
   const [nextQueue, setNextQueue] = useState();
   const [loading, setLoading] = useState(true);
-  // const history = useHistory();
+  const history = useHistory();
 
   const db = firebase.firestore();
+
+  if (localStorage.getItem('inQueue') === null) {
+    history.push('/');
+  }
 
   // Get user queue number from localStorage
   // const [inQueue, setInQueue] = useState(
