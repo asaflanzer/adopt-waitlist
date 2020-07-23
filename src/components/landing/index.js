@@ -165,6 +165,7 @@ const Landing = () => {
             <Text>
               הצטרפתם כבר לתור? <Link to='/status'>בדקו את מיקומכם</Link>
             </Text>
+            <br />
           </div>
         </Col>
       </Row>

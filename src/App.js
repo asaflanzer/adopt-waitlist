@@ -24,10 +24,10 @@ const App = () => {
             <Route path='/status'>
               <Status />
             </Route>
+            <Route path='/queue'>
+              <Queue />
+            </Route>
           </Switch>
-          <Route path='/queue'>
-            <Queue />
-          </Route>
         </BrowserRouter>
       </div>
     </FirebaseProvider>
