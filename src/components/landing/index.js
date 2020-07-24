@@ -10,6 +10,8 @@ import { Timeline } from 'antd';
 import { Statistic, Row, Col } from 'antd';
 import { Spin } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+// Cookies
+import Cookies from 'universal-cookie';
 
 const { Title, Text } = Typography;
 
@@ -22,8 +24,10 @@ const Landing = () => {
 
   const db = firebase.firestore();
 
-  if (localStorage.getItem('inQueue') !== null) {
-    history.push('/status');
+  const cookies = new Cookies();
+
+  if (cookies.get('inQueue') !== undefined) {
+    history.replace('/status');
   }
 
   // useEffect(() => {
@@ -167,7 +171,7 @@ const Landing = () => {
             </Text>
             <br />
             <br />
-            <Link to='/queue'>כניסת צוות</Link>
+            <Link to='/login'>כניסת צוות</Link>
             <br />
             <br />
           </div>

@@ -10,6 +10,8 @@ import { Statistic, Row, Col } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+// Cookies
+import Cookies from 'universal-cookie';
 
 const Status = () => {
   const firebase = useContext(FirebaseContext);
@@ -21,18 +23,20 @@ const Status = () => {
 
   const db = firebase.firestore();
 
+  const cookies = new Cookies();
+
   // Get user queue number from localStorage
   const [inQueue, setInQueue] = useState(
-    localStorage.getItem('inQueue') || 'none found'
+    cookies.get('inQueue') || 'none found'
   );
 
   useEffect(() => {
     setTimeout(() => {
       if (inQueue === null) {
-        history.push('/');
+        history.replace('/');
       }
       db.collection('queue')
-        .doc(localStorage.getItem('inQueue') || '999999')
+        .doc(cookies.get('inQueue') || '999999')
         .onSnapshot(
           (querySnapshot) => {
             if (querySnapshot.exists) {
@@ -43,7 +47,7 @@ const Status = () => {
               });
               setLoading(false);
             } else {
-              setInQueue(localStorage.getItem('inQueue'));
+              setInQueue(cookies.get('inQueue'));
               setLoading(false);
             }
           },
@@ -91,7 +95,7 @@ const Status = () => {
     // return () => {
     //   history.push('/');
     // };
-  }, [inQueue, history, db]);
+  }, [inQueue, history, db, cookies]);
 
   useEffect(() => {
     // Get the first upcoming number in queue
@@ -170,7 +174,7 @@ const Status = () => {
           .doc(userStatus.id)
           .delete()
           .then(() => {
-            localStorage.removeItem('inQueue');
+            cookies.remove('inQueue');
             history.push('/');
             // window.location.reload();
             console.log('User deleted successfully');

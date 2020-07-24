@@ -8,6 +8,8 @@ import './styled.scss';
 import { Typography } from 'antd';
 import { Form, Input, Checkbox } from 'antd';
 import { Modal } from 'antd';
+// Cookies
+import Cookies from 'universal-cookie';
 
 const { Title } = Typography;
 
@@ -21,7 +23,11 @@ const ContactForm = () => {
 
   const db = firebase.firestore();
 
-  if (localStorage.getItem('inQueue') !== null) {
+  const cookies = new Cookies();
+
+  console.log(cookies.get('inQueue'));
+
+  if (cookies.get('inQueue') !== undefined) {
     history.push('/status');
   }
 
@@ -95,6 +101,7 @@ const ContactForm = () => {
         timestamp: new Date().toISOString(),
       })
       .then(() => {
+        cookies.set('inQueue', generatePad, { path: '/' });
         // console.log('user joined queue successfully');
         //localStorage.setItem('inQueue', generatePad);
       })
