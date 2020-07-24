@@ -90,30 +90,30 @@ const ContactForm = () => {
     //   });
     // localStorage.setItem('inQueue', generatePad);
 
-    const userRef = db.collection('queue').doc(generatePad);
-    const newUser = await userRef.set({
-      ...formData,
-      status: 'pending',
-      timestamp: new Date().toISOString(),
-    });
-    cookies.set('inQueue', generatePad, { path: '/' });
-    return newUser;
+    // const userRef = db.collection('queue').doc(generatePad);
+    // const newUser = await userRef.set({
+    //   ...formData,
+    //   status: 'pending',
+    //   timestamp: new Date().toISOString(),
+    // });
+    // cookies.set('inQueue', generatePad, { path: '/' });
+    // return newUser;
 
-    // db.collection('queue')
-    //   .doc(generatePad)
-    //   .set({
-    //     ...formData,
-    //     status: 'pending',
-    //     timestamp: new Date().toISOString(),
-    //   })
-    //   .then(() => {
-    //     cookies.set('inQueue', generatePad, { path: '/' });
-    //     // console.log('user joined queue successfully');
-    //     //localStorage.setItem('inQueue', generatePad);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+    db.collection('queue')
+      .doc(generatePad)
+      .set({
+        ...formData,
+        status: 'pending',
+        timestamp: new Date().toISOString(),
+      })
+      .then(() => {
+        cookies.set('inQueue', generatePad, { path: '/' });
+        // console.log('user joined queue successfully');
+        //localStorage.setItem('inQueue', generatePad);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     // Axios.post(
     //   'https://europe-west1-virtual-line.cloudfunctions.net/api/user',
     //   {
