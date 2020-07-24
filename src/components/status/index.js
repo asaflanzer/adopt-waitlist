@@ -104,7 +104,6 @@ const Status = () => {
       .onSnapshot(
         (querySnapshot) => {
           querySnapshot.forEach((doc) => {
-            console.log(doc.id);
             setNextQueue(doc.id);
           });
         },
@@ -131,7 +130,6 @@ const Status = () => {
       .where('status', 'in', ['pending', 'notified'])
       .onSnapshot(
         (querySnapshot) => {
-          console.log(querySnapshot.size);
           setQueueLength(querySnapshot.size);
         },
         (err) => {
