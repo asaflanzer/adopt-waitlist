@@ -17,6 +17,7 @@ const Status = () => {
   const firebase = useContext(FirebaseContext);
   const [userStatus, setUserStatus] = useState([]);
   const [queueLength, setQueueLength] = useState();
+  const [lastServed, setLastServed] = useState();
   const [nextQueue, setNextQueue] = useState();
   const [loading, setLoading] = useState(true);
   const history = useHistory();
@@ -26,9 +27,7 @@ const Status = () => {
   const cookies = new Cookies();
 
   // Get user queue number from localStorage
-  const [inQueue, setInQueue] = useState(
-    cookies.get('inQueue') || 'none found'
-  );
+  const [inQueue, setInQueue] = useState(cookies.get('inQueue'));
 
   useEffect(() => {
     setTimeout(() => {
@@ -105,6 +104,7 @@ const Status = () => {
       .onSnapshot(
         (querySnapshot) => {
           querySnapshot.forEach((doc) => {
+            console.log(doc.id);
             setNextQueue(doc.id);
           });
         },
@@ -112,7 +112,18 @@ const Status = () => {
           console.log(err);
         }
       );
-  }, [nextQueue, db]);
+
+    db.collection('queue')
+      .where('status', '==', 'served')
+      .orderBy('timestamp', 'desc')
+      .limit(1)
+      .get()
+      .then((doc) => {
+        doc.forEach((data) => {
+          setLastServed(data.id);
+        });
+      });
+  }, [nextQueue, lastServed, db]);
 
   useEffect(() => {
     // Get total queue size
@@ -120,6 +131,7 @@ const Status = () => {
       .where('status', 'in', ['pending', 'notified'])
       .onSnapshot(
         (querySnapshot) => {
+          console.log(querySnapshot.size);
           setQueueLength(querySnapshot.size);
         },
         (err) => {
@@ -138,10 +150,11 @@ const Status = () => {
 
   useEffect(() => {
     // Once each user reachs number 10 in line, update status and send email via BE function
-    if (queueLength - nextQueue === 10) {
+    if (queueLength === 10) {
       //update user status to NOTIFIED
+      console.log(inQueue);
       db.collection('queue')
-        .doc(inQueue)
+        .doc(userStatus.id)
         .update({
           status: 'notified',
         })
@@ -176,7 +189,6 @@ const Status = () => {
           .then(() => {
             cookies.remove('inQueue');
             history.push('/');
-            // window.location.reload();
             console.log('User deleted successfully');
           });
       },
@@ -237,21 +249,21 @@ const Status = () => {
                 <Col span={8}>
                   <Statistic
                     title='זמן המתנה משוער'
-                    value={(queueLength - nextQueue - 1) * 2}
+                    value={queueLength * 2}
                     prefix={`'דק`}
                   />
                 </Col>
                 <Col span={8}>
                   <Statistic
                     title='ממתינים לפניך'
-                    value={queueLength - nextQueue - 1}
+                    value={queueLength}
                     prefix={<UserOutlined />}
                   />
                 </Col>
                 <Col span={8}>
                   <Statistic
                     title='אחרונים שנכנסו'
-                    value={`${nextQueue}`}
+                    value={`${lastServed}`}
                     className='last-in'
                   />
                   {/* {`ADP${nextQueue}`} */}

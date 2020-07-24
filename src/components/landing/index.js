@@ -83,10 +83,10 @@ const Landing = () => {
   return (
     <div
       style={{
-        margin: '0 15px',
+        margin: '0 auto',
         textAlign: 'center',
         maxWidth: 768,
-        paddingTop: 30,
+        padding: '30px 15px 0 15px',
       }}
     >
       <Row>
