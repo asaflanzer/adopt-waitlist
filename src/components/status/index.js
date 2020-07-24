@@ -17,8 +17,8 @@ const Status = () => {
   const firebase = useContext(FirebaseContext);
   const [userStatus, setUserStatus] = useState([]);
   const [queueLength, setQueueLength] = useState();
-  const [lastServed, setLastServed] = useState();
-  const [nextQueue, setNextQueue] = useState();
+  const [lastServed, setLastServed] = useState('');
+  const [nextQueue, setNextQueue] = useState('');
   const [loading, setLoading] = useState(true);
   const history = useHistory();
 
@@ -161,9 +161,6 @@ const Status = () => {
           setLoading(false);
         });
     }
-    return () => {
-      setLoading(false);
-    };
   }, [queueLength, nextQueue, userStatus, inQueue, db]);
 
   const handleModal = (e) => {
