@@ -12,14 +12,17 @@ import { Spin } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 // Cookies
 import Cookies from 'universal-cookie';
+import dayjs from 'dayjs';
 
 const { Title, Text } = Typography;
+
+const date = dayjs();
 
 const Landing = () => {
   const firebase = useContext(FirebaseContext);
   const history = useHistory();
   const [loading, setLoading] = useState(true);
-  const [disabled] = useState(false); // Change to true for PRODUCTION
+  const [disabled, setDisabled] = useState(false); // Change to true for PRODUCTION
   const [queueLength, setQueueLength] = useState('');
 
   const db = firebase.firestore();
@@ -30,19 +33,19 @@ const Landing = () => {
     history.push('/status');
   }
 
-  // useEffect(() => {
-  //   // //Enable queue till 15:30
-  //   // if (date.hour() === 15 && date.minute() > 30) {
-  //   //   setDisabled(true);
-  //   // }
-  //   //UNCOmMENT FOR PRODUCTION
-  //   //Enable queue on FRI between 11-15
-  //   if (date.day() === 5 && date.hour() >= 11 && date.hour() < 15) {
-  //     setDisabled(false);
-  //   } else {
-  //     setDisabled(true);
-  //   }
-  // }, []);
+  useEffect(() => {
+    // //Enable queue till 15:30
+    // if (date.hour() === 15 && date.minute() > 30) {
+    //   setDisabled(true);
+    // }
+    //UNCOmMENT FOR PRODUCTION
+    //Enable queue on FRI between 11-15
+    if (date.day() === 5 && date.hour() >= 11 && date.hour() < 15) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, []);
 
   useEffect(() => {
     // firebase
@@ -74,10 +77,10 @@ const Landing = () => {
     // ).then((result) => {
     //   setQueueLength(result.data.length);
     // });
-    return () => {
-      setQueueLength('');
-      setLoading(false);
-    };
+    // return () => {
+    //   setQueueLength('');
+    //   setLoading(false);
+    // };
   }, [db]);
 
   return (

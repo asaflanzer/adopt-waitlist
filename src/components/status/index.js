@@ -261,14 +261,16 @@ const Status = () => {
                     prefix={<UserOutlined />}
                   />
                 </Col>
-                <Col span={8}>
-                  <Statistic
-                    title='אחרונים שנכנסו'
-                    value={`${lastServed}`}
-                    className='last-in'
-                  />
-                  {/* {`ADP${nextQueue}`} */}
-                </Col>
+                {lastServed !== '' && (
+                  <Col span={8}>
+                    <Statistic
+                      title='אחרונים שנכנסו'
+                      value={`${lastServed}`}
+                      className='last-in'
+                    />
+                    {/* {`ADP${nextQueue}`} */}
+                  </Col>
+                )}
               </Row>
               <Timeline mode='right' className='landing-timeline'>
                 <Timeline.Item>
