@@ -76,10 +76,7 @@ const ContactForm = () => {
       status: '',
       timestamp: '',
     });
-    history.push({
-      pathname: '/status',
-      pad: generatePad,
-    });
+    history.push('/status');
   };
 
   const addUser = (generatePad) => {
