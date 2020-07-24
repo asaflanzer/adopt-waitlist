@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import logo from '../../../static/adopt_logo.png';
+import logo from '../../../static/adopt.png';
 import { FirebaseContext } from '../../../firebase/firebaseConfig';
 import 'firebase/auth';
 import 'firebase/firestore';

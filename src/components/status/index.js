@@ -163,6 +163,9 @@ const Status = () => {
           setLoading(false);
         });
     }
+    return () => {
+      setLoading(false);
+    };
   }, [queueLength, nextQueue, userStatus, inQueue, db]);
 
   const handleModal = (e) => {
