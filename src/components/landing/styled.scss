@@ -7,6 +7,9 @@
 
   .landing-timeline {
     margin: 20px 12% 0 0 !important; 
+    .ant-timeline-item-content {
+      font-size: 16px !important;
+    }
   }
 }
 

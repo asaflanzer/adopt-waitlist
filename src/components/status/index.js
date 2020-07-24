@@ -33,7 +33,7 @@ const Status = () => {
   useEffect(() => {
     setTimeout(() => {
       if (inQueue === null) {
-        history.replace('/');
+        history.push('/');
       }
       db.collection('queue')
         .doc(cookies.get('inQueue') || '999999')

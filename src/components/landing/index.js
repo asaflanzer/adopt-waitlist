@@ -27,7 +27,7 @@ const Landing = () => {
   const cookies = new Cookies();
 
   if (cookies.get('inQueue') !== undefined) {
-    history.replace('/status');
+    history.push('/status');
   }
 
   // useEffect(() => {
@@ -83,7 +83,7 @@ const Landing = () => {
   return (
     <div
       style={{
-        margin: '0 auto',
+        margin: '0 15px',
         textAlign: 'center',
         maxWidth: 768,
         paddingTop: 30,
@@ -103,18 +103,15 @@ const Landing = () => {
           </Title>
           <Timeline mode='right' className='landing-timeline'>
             <Timeline.Item>
-              - האימוץ יתקיים בנוכחות כל דיירי הבית
-              <br /> כולל ילדים וכלבים
+              האימוץ בנוכחות כל דיירי הבית - כולל ילדים וכלבים
             </Timeline.Item>
             <Timeline.Item>
-              לא כל הקודם זוכה - אנחנו נדבר עם כולם
-              <br />
-              ורק כשיסתיים התור יתקבלו החלטות
+              לא כל הקודם זוכה - אנחנו נדבר עם כולם ורק כשיסתיים התור יתקבלו
+              החלטות
             </Timeline.Item>
             <Timeline.Item>
-              ההמתנה יכולה לקחת זמן ויכול להיות שנחרוג
-              <br />
-              בשעת הסיום, נשמח שתתאזרו בסבלנות
+              ההמתנה יכולה לקחת זמן ויכול להיות שנחרוג בשעת הסיום, נשמח שתתאזרו
+              בסבלנות
             </Timeline.Item>
             <Timeline.Item>
               אין חובה להישאר עד תורכם אך יש להגיע
