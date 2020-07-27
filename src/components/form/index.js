@@ -68,63 +68,33 @@ const ContactForm = () => {
     event.preventDefault();
     let generatePad = pad(queueLength + 1, 3);
 
-    addUser(generatePad);
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      status: '',
-      timestamp: '',
-    });
-    history.push('/status');
-  };
+    db.collection('queue')
+      .add({
+        ...formData,
+        status: 'pending',
+        timestamp: new Date().toISOString(),
+        number: generatePad,
+      })
+      .then(function (docRef) {
+        cookies.set('inQueue', docRef.id, { path: '/' });
+        setFormData([]);
+        history.push(`/status/${docRef.id}`);
+      })
+      .catch(function (error) {
+        console.error('Error adding document: ', error);
+      });
 
-  const addUser = async (generatePad) => {
-    // firebase
-    //   .database()
-    //   .ref('users/' + generatePad)
+    // db.collection('queue')
+    //   .doc(generatePad)
     //   .set({
     //     ...formData,
     //     status: 'pending',
     //     timestamp: new Date().toISOString(),
-    //   });
-    // localStorage.setItem('inQueue', generatePad);
-
-    // const userRef = db.collection('queue').doc(generatePad);
-    // const newUser = await userRef.set({
-    //   ...formData,
-    //   status: 'pending',
-    //   timestamp: new Date().toISOString(),
-    // });
-    // cookies.set('inQueue', generatePad, { path: '/' });
-    // return newUser;
-
-    db.collection('queue')
-      .doc(generatePad)
-      .set({
-        ...formData,
-        status: 'pending',
-        timestamp: new Date().toISOString(),
-      })
-      .then(() => {
-        cookies.set('inQueue', generatePad, { path: '/' });
-        // console.log('user joined queue successfully');
-        //localStorage.setItem('inQueue', generatePad);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    // Axios.post(
-    //   'https://europe-west1-virtual-line.cloudfunctions.net/api/user',
-    //   {
-    //     ...formData,
-    //     number: generatePad,
-    //     status: 'pending',
-    //   }
-    // )
-    //   .then((response) => {
-    //     console.log(response);
-    //     localStorage.setItem('inQueue', generatePad);
+    //   })
+    //   .then(() => {
+    //     cookies.set('inQueue', generatePad, { path: '/' });
+    //     // console.log('user joined queue successfully');
+    //     //localStorage.setItem('inQueue', generatePad);
     //   })
     //   .catch((error) => {
     //     console.log(error);

@@ -13,88 +13,77 @@ import dayjs from 'dayjs';
 // Cookies
 import Cookies from 'universal-cookie';
 
-const Status = () => {
+const cookies = new Cookies();
+
+const useGetStatus = (inQueue) => {
   const firebase = useContext(FirebaseContext);
-  const [userStatus, setUserStatus] = useState([]);
-  const [queueLength, setQueueLength] = useState();
-  const [lastServed, setLastServed] = useState('');
-  const [nextQueue, setNextQueue] = useState('');
-  const [loading, setLoading] = useState(true);
-  const history = useHistory();
-
   const db = firebase.firestore();
-
-  const cookies = new Cookies();
-
-  // Get user queue number from localStorage
-  const [inQueue, setInQueue] = useState(cookies.get('inQueue'));
+  // const [loading, setLoading] = useState(true);
+  const history = useHistory();
+  const [userStatus, setUserStatus] = useState([]);
 
   useEffect(() => {
-    setTimeout(() => {
-      if (inQueue === null) {
-        history.push('/');
-      }
-      db.collection('queue')
-        .doc(cookies.get('inQueue') || '999999')
-        .onSnapshot(
+    //setTimeout(() => {
+
+    async function fetchStatus() {
+      try {
+        const user = await db.collection('queue').doc(inQueue);
+
+        user.onSnapshot(
           (querySnapshot) => {
             if (querySnapshot.exists) {
               setUserStatus({
                 id: querySnapshot.id,
                 name: querySnapshot.data().name,
                 timestamp: querySnapshot.data().timestamp,
+                number: querySnapshot.data().number,
               });
-              setLoading(false);
+              //setLoading(false);
             } else {
-              setInQueue(cookies.get('inQueue'));
-              setLoading(false);
+              //setInQueue(cookies.get('inQueue'));
+              //setLoading(false);
             }
           },
           (err) => {
             console.log(err);
           }
         );
-    }, 1000);
+      } catch (error) {}
+    }
+    if (inQueue !== null) {
+      fetchStatus();
+    } else {
+      history.push('/');
+    }
 
-    // .then((doc) => {
-    //   if (doc.exists) {
-    //     setUserStatus({
-    //       id: doc.id,
-    //       name: doc.data().name,
-    //       timestamp: doc.data().timestamp,
+    // if (userStatus.status === 'served') {
+    //   db.collection('queue')
+    //     .doc(userStatus.id)
+    //     .delete()
+    //     .then(() => {
+    //       cookies.remove('inQueue');
+    //       history.push('/');
+    //       console.log('User deleted successfully');
     //     });
-    //   } else {
-    //     //setLoaded(false);
-    //   }
-    // })
-    // .catch((error) => {
-    //   console.log(error);
-    // });
+    // }
 
-    // firebase
-    //   .database()
-    //   .ref(`users/${inQueue}`)
-    //   .once('value', (snapshot) => {
-    //     setUserStatus({
-    //       id: snapshot.val().id,
-    //       name: snapshot.val().name,
-    //       number: snapshot.ref.key,
-    //     });
-    //   });
+    //}, 1000);
+  }, [inQueue, history, db]);
 
-    // Axios.get(
-    //   `https://europe-west1-virtual-line.cloudfunctions.net/api/user/${inQueue}`
-    // )
-    //   .then((res) => {
-    //     console.log('user', res.data);
-    //     setUserStatus(res.data);
-    //   })
-    //   .catch((err) => console.log(err));
+  return userStatus;
+};
+const Status = () => {
+  const firebase = useContext(FirebaseContext);
+  const db = firebase.firestore();
+  // const [loading, setLoading] = useState(true);
+  const history = useHistory();
 
-    // return () => {
-    //   history.push('/');
-    // };
-  }, [inQueue, history, db, cookies]);
+  const [queueLength, setQueueLength] = useState();
+  const [lastServed, setLastServed] = useState('');
+  const [nextQueue, setNextQueue] = useState('');
+  // Get user queue number from cookies
+  const [inQueue] = useState(cookies.get('inQueue'));
+  const userStatus = useGetStatus(cookies.get('inQueue'));
 
   useEffect(() => {
     // Get the first upcoming number in queue
@@ -104,7 +93,7 @@ const Status = () => {
       .onSnapshot(
         (querySnapshot) => {
           querySnapshot.forEach((doc) => {
-            setNextQueue(doc.id);
+            setNextQueue(doc.data().number);
           });
         },
         (err) => {
@@ -116,12 +105,16 @@ const Status = () => {
       .where('status', '==', 'served')
       .orderBy('timestamp', 'desc')
       .limit(1)
-      .get()
-      .then((doc) => {
-        doc.forEach((data) => {
-          setLastServed(data.id);
-        });
-      });
+      .onSnapshot(
+        (querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            setLastServed(doc.data().number);
+          });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
   }, [nextQueue, lastServed, db]);
 
   useEffect(() => {
@@ -158,7 +151,6 @@ const Status = () => {
         })
         .then(() => {
           console.log('user is being notified');
-          setLoading(false);
         });
     }
   }, [queueLength, nextQueue, userStatus, inQueue, db]);
@@ -205,11 +197,11 @@ const Status = () => {
         maxWidth: 768,
       }}
     >
-      {loading ? (
+      {userStatus === null ? (
         <div>
           <Spin />
         </div>
-      ) : userStatus.length === 0 ? (
+      ) : userStatus === 0 ? (
         <div>
           <Result
             title='נראה שאין לכם מספר בתור'
@@ -236,8 +228,8 @@ const Status = () => {
               }}
             >
               <p>מספרך בתור</p>
-              {userStatus.id ? (
-                <h2 style={{ fontSize: 50 }}>{`${userStatus.id}`}</h2>
+              {userStatus.number ? (
+                <h2 style={{ fontSize: 50 }}>{`${userStatus.number}`}</h2>
               ) : (
                 // {`ADP${userStatus.id}`}
                 <h2 style={{ fontSize: 50 }}>{`${inQueue}`}</h2>

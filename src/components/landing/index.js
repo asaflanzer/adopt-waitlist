@@ -12,17 +12,17 @@ import { Spin } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 // Cookies
 import Cookies from 'universal-cookie';
-import dayjs from 'dayjs';
+//import dayjs from 'dayjs';
+
+//const date = dayjs();
 
 const { Title, Text } = Typography;
-
-const date = dayjs();
 
 const Landing = () => {
   const firebase = useContext(FirebaseContext);
   const history = useHistory();
   const [loading, setLoading] = useState(true);
-  const [disabled] = useState(true); // Change to true for PRODUCTION
+  const [disabled] = useState(false); // Change to true for PRODUCTION
   const [queueLength, setQueueLength] = useState('');
 
   const db = firebase.firestore();
@@ -48,14 +48,6 @@ const Landing = () => {
   // }, []);
 
   useEffect(() => {
-    // firebase
-    //   .database()
-    //   .ref('users/')
-    //   .once('value', (snapshot) => {
-    //     console.log(snapshot.numChildren());
-    //     setQueueLength(snapshot.numChildren());
-    //   });
-
     // Get total queue size
     db.collection('queue')
       .where('status', 'in', ['pending', 'notified'])
@@ -72,15 +64,6 @@ const Landing = () => {
           console.log(err);
         }
       );
-    // Axios.get(
-    //   'https://europe-west1-virtual-line.cloudfunctions.net/api/user'
-    // ).then((result) => {
-    //   setQueueLength(result.data.length);
-    // });
-    // return () => {
-    //   setQueueLength('');
-    //   setLoading(false);
-    // };
   }, [db]);
 
   return (

@@ -77,9 +77,9 @@ const columns = [
   },
   {
     title: 'מספר',
-    dataIndex: 'id',
+    dataIndex: 'number',
     key: 'id',
-    render: (key) => <b>{key}</b>, //<b>ADP{key}</b>
+    render: (number) => <b>{number}</b>, //<b>ADP{key}</b>
   },
   {
     title: 'שם',
@@ -136,39 +136,6 @@ const Queue = () => {
           console.log(err);
         }
       );
-
-    // firebase
-    //   .database()
-    //   .ref('users/')
-    //   .orderByChild('status')
-    //   .equalTo('pending')
-    //   .on('value', (snapshot) => {
-    //     snapshot.forEach((child) => {
-    //       console.log(child.key, child.val());
-    //       queue.push({
-    //         id: child.key,
-    //         ...child.val(),
-    //       });
-    //     });
-    //   });
-    // setUsersList(queue);
-
-    // Axios.get(
-    //   'https://europe-west1-virtual-line.cloudfunctions.net/api/user'
-    // ).then((result) => {
-    //   const queue = result.data
-    //     .filter((u) => u.status === 'pending')
-    //     .map((user) => {
-    //       return user;
-    //     });
-    //   // setUsersList(
-    //   //   queue.sort((a, b) => {
-    //   //     const dateA = new Date(a.timestamp);
-    //   //     const dateB = new Date(b.timestamp);
-    //   //     return dateA - dateB;
-    //   //   })
-    //   // );
-    // });
   }, [loading, db]);
 
   useEffect(() => {
@@ -191,30 +158,7 @@ const Queue = () => {
           console.log(err);
         }
       );
-
-    //   Axios.get(
-    //     'https://europe-west1-virtual-line.cloudfunctions.net/api/user'
-    //   ).then((result) => {
-    //     const served = result.data
-    //       .filter((u) => u.status === 'served')
-    //       .map((user) => {
-    //         return user;
-    //       });
-    //     setServedList(served);
-    //   });
   }, [loading, db]);
-
-  // useEffect(() => {
-  //   // Get total queue size
-  //   db.collection('queue')
-  //     .where('status', '==', 'pending')
-  //     .onSnapshot((querySnapshot) => {
-  //       setTotalInQueue(querySnapshot.size);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }, [totalInQueue]);
 
   useEffect(() => {
     // Get total queue size
@@ -259,7 +203,7 @@ const Queue = () => {
       .get()
       .then((doc) => {
         doc.forEach((data) => {
-          setLastServed(data.id);
+          setLastServed(data.data().number);
         });
       });
   }, [db]);
@@ -317,23 +261,6 @@ const Queue = () => {
           console.log(err);
         }
       );
-
-    // Axios.put(
-    //   `https://europe-west1-virtual-line.cloudfunctions.net/api/user/${usersList[0].id}`,
-    //   {
-    //     ...usersList[0],
-    //     status: 'served',
-    //   }
-    // )
-    //   .then((res) => {
-    //     usersList.slice(0, 1);
-    //     setUsersList(usersList.slice(0, 1));
-    //     console.log(usersList);
-    //     console.log(res.config.data);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
   };
 
   const handleResetQueue = () => {
@@ -354,7 +281,6 @@ const Queue = () => {
       okType: 'danger',
       cancelText: 'חזור',
       onOk() {
-        // NEED TO CHANGE TO 'QUEUE' COLLECTION IN PRODUCTION!!!
         db.collection('queue')
           .get()
           .then((querySnapshot) => {
