@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 // compontents
 import Landing from './components/landing';
 import ContactForm from './components/form';
@@ -9,6 +9,10 @@ import Queue from './components/admin/queue';
 // ant design
 import 'antd/dist/antd.css';
 import FirebaseProvider from './firebase/firebaseConfig';
+// Cookies
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 
 export const AuthContext = React.createContext(null);
 
@@ -22,10 +26,18 @@ const App = () => {
           <BrowserRouter>
             <Switch>
               <Route exact path='/'>
-                <Landing />
+                {cookies.get('inQueue') !== undefined ? (
+                  <Redirect to='/status' />
+                ) : (
+                  <Landing />
+                )}
               </Route>
               <Route path='/form'>
-                <ContactForm />
+                {cookies.get('inQueue') !== undefined ? (
+                  <Redirect to='/status' />
+                ) : (
+                  <ContactForm />
+                )}
               </Route>
               <Route path='/status'>
                 <Status />
@@ -34,6 +46,7 @@ const App = () => {
                 <Login />
               </Route>
               <Route path='/queue' component={Queue} />
+              <Redirect to='/' />
             </Switch>
           </BrowserRouter>
         </div>

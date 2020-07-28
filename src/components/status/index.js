@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { FirebaseContext } from '../../firebase/firebaseConfig';
 import 'firebase/firestore';
@@ -10,142 +10,26 @@ import { Statistic, Row, Col } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+// custom hooks
+import useQueue from '../hooks/useQueue';
+import useGetUser from '../hooks/useGetUser';
 // Cookies
 import Cookies from 'universal-cookie';
-
 const cookies = new Cookies();
 
-const useGetStatus = (inQueue) => {
-  const firebase = useContext(FirebaseContext);
-  const db = firebase.firestore();
-  // const [loading, setLoading] = useState(true);
-  const history = useHistory();
-  const [userStatus, setUserStatus] = useState([]);
-
-  useEffect(() => {
-    //setTimeout(() => {
-
-    async function fetchStatus() {
-      try {
-        const user = await db.collection('queue').doc(inQueue);
-
-        user.onSnapshot(
-          (querySnapshot) => {
-            if (querySnapshot.exists) {
-              setUserStatus({
-                id: querySnapshot.id,
-                name: querySnapshot.data().name,
-                timestamp: querySnapshot.data().timestamp,
-                number: querySnapshot.data().number,
-              });
-              //setLoading(false);
-            } else {
-              //setInQueue(cookies.get('inQueue'));
-              //setLoading(false);
-            }
-          },
-          (err) => {
-            console.log(err);
-          }
-        );
-      } catch (error) {}
-    }
-    if (inQueue !== null) {
-      fetchStatus();
-    } else {
-      history.push('/');
-    }
-
-    // if (userStatus.status === 'served') {
-    //   db.collection('queue')
-    //     .doc(userStatus.id)
-    //     .delete()
-    //     .then(() => {
-    //       cookies.remove('inQueue');
-    //       history.push('/');
-    //       console.log('User deleted successfully');
-    //     });
-    // }
-
-    //}, 1000);
-  }, [inQueue, history, db]);
-
-  return userStatus;
-};
 const Status = () => {
+  const { queueLength, nextQueue, lastServed } = useQueue();
+  const { loading, userStatus } = useGetUser();
   const firebase = useContext(FirebaseContext);
   const db = firebase.firestore();
-  // const [loading, setLoading] = useState(true);
   const history = useHistory();
-
-  const [queueLength, setQueueLength] = useState();
-  const [lastServed, setLastServed] = useState('');
-  const [nextQueue, setNextQueue] = useState('');
-  // Get user queue number from cookies
-  const [inQueue] = useState(cookies.get('inQueue'));
-  const userStatus = useGetStatus(cookies.get('inQueue'));
-
-  useEffect(() => {
-    // Get the first upcoming number in queue
-    db.collection('queue')
-      .where('status', 'in', ['pending', 'notified'])
-      .limit(1)
-      .onSnapshot(
-        (querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            setNextQueue(doc.data().number);
-          });
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-
-    db.collection('queue')
-      .where('status', '==', 'served')
-      .orderBy('timestamp', 'desc')
-      .limit(1)
-      .onSnapshot(
-        (querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            setLastServed(doc.data().number);
-          });
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-  }, [nextQueue, lastServed, db]);
-
-  useEffect(() => {
-    // Get total queue size
-    db.collection('queue')
-      .where('status', 'in', ['pending', 'notified'])
-      .onSnapshot(
-        (querySnapshot) => {
-          setQueueLength(querySnapshot.size);
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-
-    // firebase
-    //   .database()
-    //   .ref('users/')
-    //   .once('value', (snapshot) => {
-    //     console.log(snapshot.numChildren());
-    //     setQueueLength(snapshot.numChildren());
-    //   });
-  }, [queueLength, db]);
 
   useEffect(() => {
     // Once each user reachs number 10 in line, update status and send email via BE function
     if (queueLength === 10) {
       //update user status to NOTIFIED
-      console.log(inQueue);
       db.collection('queue')
-        .doc(userStatus.id)
+        .doc(cookies.get('inQueue'))
         .update({
           status: 'notified',
         })
@@ -153,7 +37,7 @@ const Status = () => {
           console.log('user is being notified');
         });
     }
-  }, [queueLength, nextQueue, userStatus, inQueue, db]);
+  }, [queueLength, db]);
 
   const handleModal = (e) => {
     e.preventDefault();
@@ -197,11 +81,11 @@ const Status = () => {
         maxWidth: 768,
       }}
     >
-      {userStatus === null ? (
+      {loading === true ? (
         <div>
           <Spin />
         </div>
-      ) : userStatus === 0 ? (
+      ) : cookies.get('inQueue') === undefined ? (
         <div>
           <Result
             title='נראה שאין לכם מספר בתור'
@@ -228,12 +112,8 @@ const Status = () => {
               }}
             >
               <p>מספרך בתור</p>
-              {userStatus.number ? (
+              {userStatus.number && (
                 <h2 style={{ fontSize: 50 }}>{`${userStatus.number}`}</h2>
-              ) : (
-                // {`ADP${userStatus.id}`}
-                <h2 style={{ fontSize: 50 }}>{`${inQueue}`}</h2>
-                // {`ADP${inQueue}`}
               )}
               <Row gutter={16}>
                 <Col span={8}>
@@ -257,7 +137,6 @@ const Status = () => {
                       value={`${lastServed}`}
                       className='last-in'
                     />
-                    {/* {`ADP${nextQueue}`} */}
                   </Col>
                 )}
               </Row>

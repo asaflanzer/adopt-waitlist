@@ -1,70 +1,41 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import logo from '../../static/adopt.png';
-import { FirebaseContext } from '../../firebase/firebaseConfig';
-import 'firebase/firestore';
 import './styled.scss';
-// ant design
+// ant designs
 import { Typography } from 'antd';
 import { Timeline } from 'antd';
 import { Statistic, Row, Col } from 'antd';
 import { Spin } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-// Cookies
-import Cookies from 'universal-cookie';
+// custom hooks
+import useQueue from '../hooks/useQueue';
 //import dayjs from 'dayjs';
-
 //const date = dayjs();
 
 const { Title, Text } = Typography;
 
 const Landing = () => {
-  const firebase = useContext(FirebaseContext);
   const history = useHistory();
-  const [loading, setLoading] = useState(true);
+  const { queueLength } = useQueue();
   const [disabled] = useState(false); // Change to true for PRODUCTION
-  const [queueLength, setQueueLength] = useState('');
-
-  const db = firebase.firestore();
-
-  const cookies = new Cookies();
-
-  if (cookies.get('inQueue') !== undefined) {
-    history.push('/status');
-  }
-
-  // useEffect(() => {
-  //   // //Enable queue till 15:30
-  //   // if (date.hour() === 15 && date.minute() > 30) {
-  //   //   setDisabled(true);
-  //   // }
-  //   //UNCOmMENT FOR PRODUCTION
-  //   //Enable queue on FRI between 11-15
-  //   if (date.day() === 5 && date.hour() >= 11 && date.hour() < 15) {
-  //     setDisabled(false);
-  //   } else {
-  //     setDisabled(true);
-  //   }
-  // }, []);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get total queue size
-    db.collection('queue')
-      .where('status', 'in', ['pending', 'notified'])
-      .onSnapshot(
-        (querySnapshot) => {
-          setLoading(false);
-          setQueueLength(querySnapshot.size);
-          // const queue = [];
-          // querySnapshot.forEach((doc) => {
-          //   setNextQueue(doc.id);
-          // });
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-  }, [db]);
+    //   // //Enable queue till 15:30
+    //   // if (date.hour() === 15 && date.minute() > 30) {
+    //   //   setDisabled(true);
+    //   // }
+    //   //UNCOmMENT FOR PRODUCTION
+    //   //Enable queue on FRI between 11-15
+    //   if (date.day() === 5 && date.hour() >= 11 && date.hour() < 15) {
+    //     setDisabled(false);
+    //setLoading(false);
+    //   } else {
+    //     setDisabled(true);
+    //   }
+    setLoading(false);
+  }, []);
 
   return (
     <div

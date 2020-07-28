@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import { FirebaseContext } from '../../firebase/firebaseConfig';
 import 'firebase/firestore';
-// import firebase from 'firebase/app';
 import './styled.scss';
 // ant design
 import { Typography } from 'antd';
@@ -10,46 +9,23 @@ import { Form, Input, Checkbox } from 'antd';
 import { Modal } from 'antd';
 // Cookies
 import Cookies from 'universal-cookie';
+// custom hooks
+import useQueue from '../hooks/useQueue';
 
 const { Title } = Typography;
 
 const ContactForm = () => {
+  const { queueLength } = useQueue();
   const firebase = useContext(FirebaseContext);
   const [formData, setFormData] = useState([]);
   const [readDoc, setReadDoc] = useState(false);
   const [disabled, setDisabled] = useState(true);
-  const [queueLength, setQueueLength] = useState('');
+
   const history = useHistory();
 
   const db = firebase.firestore();
 
   const cookies = new Cookies();
-
-  console.log(cookies.get('inQueue'));
-
-  if (cookies.get('inQueue') !== undefined) {
-    history.push('/status');
-  }
-
-  useEffect(() => {
-    // Get total queue size
-    // firebase
-    //   .database()
-    //   .ref('users/')
-    //   .once('value', (snapshot) => {
-    //     console.log(snapshot.numChildren());
-    //     setQueueLength(snapshot.numChildren());
-    //   });
-
-    db.collection('queue')
-      .get()
-      .then((snapshot) => {
-        setQueueLength(snapshot.size);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [queueLength, db]);
 
   const updateInput = (e) => {
     setFormData({
@@ -68,21 +44,39 @@ const ContactForm = () => {
     event.preventDefault();
     let generatePad = pad(queueLength + 1, 3);
 
-    db.collection('queue')
-      .add({
-        ...formData,
-        status: 'pending',
-        timestamp: new Date().toISOString(),
-        number: generatePad,
-      })
-      .then(function (docRef) {
-        cookies.set('inQueue', docRef.id, { path: '/' });
-        setFormData([]);
-        history.push(`/status/${docRef.id}`);
-      })
-      .catch(function (error) {
-        console.error('Error adding document: ', error);
-      });
+    // new way
+    const batch = db.batch();
+    const docRef = db.collection('queue').doc();
+
+    batch.set(docRef, {
+      ...formData,
+      status: 'pending',
+      timestamp: new Date().toISOString(),
+      number: generatePad,
+    });
+
+    batch.commit().then(() => {
+      cookies.set('inQueue', docRef.id, { path: '/' });
+      setFormData([]);
+      history.push(`/status/${docRef.id}`);
+    });
+
+    // old way
+    // db.collection('queue')
+    //   .add({
+    //     ...formData,
+    //     status: 'pending',
+    //     timestamp: new Date().toISOString(),
+    //     number: generatePad,
+    //   })
+    //   .then(function (docRef) {
+    //     cookies.set('inQueue', docRef.id, { path: '/' });
+    //     setFormData([]);
+    //     history.push(`/status/${docRef.id}`);
+    //   })
+    //   .catch(function (error) {
+    //     console.error('Error adding document: ', error);
+    //   });
 
     // db.collection('queue')
     //   .doc(generatePad)
