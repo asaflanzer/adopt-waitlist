@@ -1,12 +1,14 @@
 
+@media only screen and (min-width: 768px) {
 .landing-timeline {
-  margin: 20px 30% 0 0 !important;
+  margin: 20px auto 0 auto !important;
+  width: 430px;
+}
 }
 
 @media only screen and (max-width: 768px) {
 
   .landing-timeline {
-    margin: 20px 12% 0 0 !important; 
     .ant-timeline-item-content {
       font-size: 16px !important;
     }

@@ -5,9 +5,10 @@ import 'firebase/firestore';
 const useQueue = () => {
   const firebase = useContext(FirebaseContext);
   const db = firebase.firestore();
-  const [queueLength, setQueueLength] = useState();
-  const [nextQueue, setNextQueue] = useState();
+  const [queueLength, setQueueLength] = useState('');
+  const [nextQueue, setNextQueue] = useState('');
   const [lastServed, setLastServed] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Get total queue size
@@ -52,10 +53,11 @@ const useQueue = () => {
             console.log(err);
           }
         );
+      setLoading(false);
     };
 
     fetchData();
-  }, [queueLength, nextQueue, lastServed, db]);
+  }, [loading, queueLength, nextQueue, lastServed, db]);
 
   return { queueLength, nextQueue, lastServed };
 };

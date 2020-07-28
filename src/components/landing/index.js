@@ -17,9 +17,8 @@ const { Title, Text } = Typography;
 
 const Landing = () => {
   const history = useHistory();
-  const { queueLength } = useQueue();
+  const { loading, queueLength } = useQueue();
   const [disabled] = useState(false); // Change to true for PRODUCTION
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     //   // //Enable queue till 15:30
@@ -34,7 +33,7 @@ const Landing = () => {
     //   } else {
     //     setDisabled(true);
     //   }
-    setLoading(false);
+    //setLoading(false);
   }, []);
 
   return (
@@ -71,14 +70,18 @@ const Landing = () => {
               בסבלנות
             </Timeline.Item>
             <Timeline.Item>
-              אין חובה להישאר עד תורכם אך יש להגיע
-              <br />
-              בזמן לפי עדכוני האפליקציה
+              אין חובה להישאר עד תורכם אך יש להגיע בזמן לפי עדכוני האפליקציה
             </Timeline.Item>
           </Timeline>
           <Row gutter={16}>
             <Col span={2} />
-            {queueLength !== '' ? (
+            {queueLength === '' ? (
+              <Col span={20}>
+                <div className='loading'>
+                  <Spin />
+                </div>
+              </Col>
+            ) : (
               <>
                 <Col span={10}>
                   <Statistic
@@ -93,14 +96,6 @@ const Landing = () => {
                     value={queueLength}
                     prefix={<UserOutlined />}
                   />
-                </Col>
-              </>
-            ) : (
-              <>
-                <Col span={20}>
-                  <div className='loading'>
-                    <Spin />
-                  </div>
                 </Col>
               </>
             )}
