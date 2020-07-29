@@ -52,11 +52,18 @@ const ContactForm = () => {
       ...formData,
       status: 'pending',
       timestamp: new Date().toISOString(),
-      number: generatePad,
     });
 
     batch.commit().then(() => {
       cookies.set('inQueue', docRef.id, { path: '/' });
+      db.collection('queue')
+        .doc(docRef.id)
+        .update({
+          number: generatePad,
+        })
+        .then(() => {
+          console.log('user added number successfully');
+        });
       setFormData([]);
       history.push(`/status/${docRef.id}`);
     });
